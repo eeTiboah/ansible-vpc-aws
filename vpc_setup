@@ -1,0 +1,23 @@
+
+vpc_name: demo-vpc
+
+# VPC range
+vpc_cidr: 172.20.0.0/16
+
+# Subnet range
+subnet_pub1_cidr: 172.20.1.0/16
+subnet_pub2_cidr: 172.20.2.0/16
+subnet_pub3_cidr: 172.20.3.0/16
+subnet_priv1_cidr: 172.20.4.0/16
+subnet_priv2_cidr: 172.20.5.0/16
+subnet_priv3_cidr: 172.20.6.0/16
+
+# Region
+vpc_region: us-east-1
+
+#Zone names
+zone1: us-east-1a
+zone2: us-east-1b
+zone3: us-east-1c
+
+state: present
