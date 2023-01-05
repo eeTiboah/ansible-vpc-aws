@@ -13,6 +13,9 @@
         name: "{{vpc_name}}"
         cidr_block: "{{vpc_cidr}}"
         region: "{{region}}"
+        dns_support: yes
+        dns_hostnames: yes
+        tenancy: default
         state: "{{state}}"
       register: vpcout
 
