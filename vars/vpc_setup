@@ -13,7 +13,7 @@ subnet_priv2_cidr: 172.20.5.0/16
 subnet_priv3_cidr: 172.20.6.0/16
 
 # Region
-vpc_region: us-east-1
+region: us-east-1
 
 #Zone names
 zone1: us-east-1a
