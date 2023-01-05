@@ -10,25 +10,25 @@
 
     - name: Create VPC
       ec2_vpc_net:
-        name: "{{ vpc_name }}"
-        cidr_block: "{{ vpc_cidr }}"
-        region: "{{ region }}"
+        name: "{{vpc_name}}"
+        cidr_block: "{{vpc_cidr}}"
+        region: "{{region}}"
         dns_support: yes
         dns_hostnames: yes
         tenancy: default
-        state: "{{ state }}"
-      register: vpc
+        state: "{{state}}"
+      register: vpcout
 
     - debug:
-        var: vpc
+        var: vpcout
          
     - name: Create Public Subnet 1 in Zone 1
       ec2_vpc_subnet: 
-        state: "{{ state }}"
-        vpc_id: "{{ vpc.vpc.id }}"
-        region: "{{ region }}"
-        az: "{{ zone1 }}"
-        cidr: "{{ subnet_pub1_cidr }}"
+        state: "{{state}}"
+        vpc_id: "{{vpcout['vpc']['id']}}"
+        region: "{{region}}"
+        az: "{{az1}}"
+        cidr: "{{subnet_pub1_cidr}}"
         map_public: yes
         tags:
           name: demo-vpc-pubsub1
