@@ -16,10 +16,10 @@
         state: "{{state}}"
       register: vpcout
 
-    - debug:
-        var: vpcout
+    # - debug:
+    #     var: vpcout
          
-    - name: Create Public Subnet
+    - name: Create Public Subnet 1 in zone 1
       ec2_vpc_subnet: 
         state: "{{state}}"
         vpc_id: "{{vpcout.vpc.id}}"
@@ -30,6 +30,32 @@
         resource_tags:
           Name: demo-vpc-pubsub1
       register: pubsub1out
+      
+
+    - name: Create Public Subnet 2 in zone 2
+      ec2_vpc_subnet: 
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        az: "{{az2}}"
+        cidr: "{{subnet_pub2_cidr}}"
+        map_public: yes
+        resource_tags:
+          Name: demo-vpc-pubsub2
+      register: pubsub2out
+
+
+    - name: Create Public Subnet 3 in zone 3
+      ec2_vpc_subnet: 
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        az: "{{az3}}"
+        cidr: "{{subnet_pub3_cidr}}"
+        map_public: yes
+        resource_tags:
+          Name: demo-vpc-pubsub3
+      register: pubsub3out
 
 
       
