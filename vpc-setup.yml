@@ -90,5 +90,13 @@
           Name: demo-vpc-privsub3
       register: privsub3out
 
+    - name: Internet Gateway setup
+      ec2_vpc_igw:
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        resource_tags:
+          Name: demo-vpc-igw
+      register: igwout
 
       
