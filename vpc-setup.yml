@@ -117,7 +117,7 @@
       register: rtbpubout
 
     
-    - name: Create Security Groups
+    - name: Create Security Group for NAT instance
       ec2_group:
         name: "NATSG"
         description: "This is the security group for the NAT instance"
@@ -164,7 +164,7 @@
           - "{{privsub3out.subnet.id}}"
         routes:
           - dest: 0.0.0.0/0
-            instance_id: "{{natinstanceout.instance_id}}"
+            instance_id: "{{natinstanceout.instances[0].instance_id}}"
       register: rtbnatout
 
 

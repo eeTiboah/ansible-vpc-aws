@@ -9,4 +9,48 @@
 
     - name: Import Output variables
       include_vars: vars/output_vars
+
+    - name: Create ec2 key
+      ec2_key:
+        name: bastion-key
+        region: "{{region}}"
+      
+      register: key_out
+    
+    - name: Save private key into bastion-key.pem
+      copy: 
+        content: "{{key_out.key.private_key}}"
+        dest: "./bastion-key.pem"
+        mode: 0600
+      
+      when: key_out.changed
+    
+    - name: Create Security Group for Bastion host
+      ec2_group:
+        name: "Bastion-host-sg"
+        description: "This is the security group for the NAT instance"
+        vpc_id: "{{vpcid.vpc.id}}"
+        region: "{{region}}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: "{{ip}}"
+            rule_desc: allow ssh connection
+      register: bastionsgout
+    
+    - name: Create Bastion instance
+      ec2_instance:
+        name: "Bastion Instance"
+        key_name: bastion-key
+        vpc_subnet_id: "{{pubsub1out.subnet.id}}"
+        image_id: "{{bastion_ami}}"
+        region: "{{region}}"
+        state: "{{state}}"
+        security_group: "{{bastionsgout.group_name}}"
+        network:
+          assign_public_ip: true
+        instance_tags:
+          Name: "Bastion Instance"
+      register: bastioninstanceout
     
