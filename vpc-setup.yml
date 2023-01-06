@@ -16,8 +16,6 @@
         state: "{{state}}"
       register: vpcout
 
-    # - debug:
-    #     var: vpcout
          
     - name: Create Public Subnet 1 in zone 1
       ec2_vpc_subnet: 
@@ -68,6 +66,7 @@
           Name: demo-vpc-privsub1
       register: privsub1out
 
+
     - name: Create Private Subnet 2 in zone 2
       ec2_vpc_subnet: 
         state: "{{state}}"
@@ -78,6 +77,7 @@
         resource_tags:
           Name: demo-vpc-privsub2
       register: privsub2out
+
 
     - name: Create Private Subnet 3 in zone 3
       ec2_vpc_subnet: 
@@ -90,6 +90,7 @@
           Name: demo-vpc-privsub3
       register: privsub3out
 
+
     - name: Internet Gateway setup
       ec2_vpc_igw:
         state: "{{state}}"
@@ -98,6 +99,7 @@
         resource_tags:
           Name: demo-vpc-igw
       register: igwout
+
 
     - name: Set up route table for public subnet
       ec2_vpc_route_table:
@@ -113,6 +115,42 @@
           - dest: 0.0.0.0/0
             gateway_id: "{{igwout.gateway_id}}"
       register: rtbout
+
+    
+    - name: Create Security Groups
+      ec2_group:
+        name: "NAT SG"
+        description: "This is the security group for the NAT instance"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow ssh connection
+          
+          - proto: all
+            from_port: 0
+            to_port: 65535
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all icmp connections
+      register: natsgout
+
+    - name: Set up a NAT instance
+      ec2_instance:
+        name: "NAT instance"
+        key_name: "sample_keypair"
+        vpc_subnet_id: "{{pubsub1out.subnet.id}}"
+        image_id: "ami-04e5df0cf5946b2a4"
+        region: "{{region}}"
+        state: "{{state}}"
+        security_group: "{{natsgout.group_name}}"
+        network:
+          assign_public_ip: true
+        tags:
+          Name: "Nat Instance"
+
 
 
       

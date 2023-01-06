@@ -13,11 +13,11 @@ subnet_priv2_cidr: 172.20.5.0/24
 subnet_priv3_cidr: 172.20.6.0/24
 
 # Region
-region: us-east-2
+region: us-east-1
 
 #Zone names
-az1: us-east-2a
-az2: us-east-2b
-az3: us-east-2c
+az1: us-east-1a
+az2: us-east-1b
+az3: us-east-1c
 
 state: present
