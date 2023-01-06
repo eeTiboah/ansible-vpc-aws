@@ -30,7 +30,7 @@
         resource_tags:
           Name: demo-vpc-pubsub1
       register: pubsub1out
-      
+
 
     - name: Create Public Subnet 2 in zone 2
       ec2_vpc_subnet: 
@@ -56,6 +56,39 @@
         resource_tags:
           Name: demo-vpc-pubsub3
       register: pubsub3out
+
+    - name: Create Private Subnet 1 in zone 1
+      ec2_vpc_subnet: 
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        az: "{{az1}}"
+        cidr: "{{subnet_priv1_cidr}}"
+        resource_tags:
+          Name: demo-vpc-privsub1
+      register: privsub1out
+
+    - name: Create Private Subnet 2 in zone 2
+      ec2_vpc_subnet: 
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        az: "{{az2}}"
+        cidr: "{{subnet_priv2_cidr}}"
+        resource_tags:
+          Name: demo-vpc-privsub2
+      register: privsub2out
+
+    - name: Create Private Subnet 3 in zone 3
+      ec2_vpc_subnet: 
+        state: "{{state}}"
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        az: "{{az3}}"
+        cidr: "{{subnet_priv3_cidr}}"
+        resource_tags:
+          Name: demo-vpc-privsub3
+      register: privsub3out
 
 
       
