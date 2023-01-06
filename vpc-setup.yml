@@ -99,4 +99,20 @@
           Name: demo-vpc-igw
       register: igwout
 
+    - name: Set up route table for public subnet
+      ec2_vpc_route_table:
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: "{{region}}"
+        resource_tags:
+          Name: demo-vpc-rtb
+        subnets:
+          - "{{pubsub1out.subnet.id}}"
+          - "{{pubsub2out.subnet.id}}"
+          - "{{pubsub3out.subnet.id}}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{igwout.gateway_id}}"
+      register: rtbout
+
+
       
