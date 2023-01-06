@@ -12,6 +12,7 @@ subnet_priv1_cidr: 172.20.4.0/24
 subnet_priv2_cidr: 172.20.5.0/24
 subnet_priv3_cidr: 172.20.6.0/24
 
+nat_instance_ami: ami-04e5df0cf5946b2a4
 # Region
 region: us-east-1
 
