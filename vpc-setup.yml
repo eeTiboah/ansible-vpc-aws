@@ -22,13 +22,14 @@
     - name: Create Public Subnet
       ec2_vpc_subnet: 
         state: "{{state}}"
-        vpc_id: "{{vpcout.vpc_id}}"
+        vpc_id: "{{vpcout.vpc.id}}"
         region: "{{region}}"
         az: "{{az1}}"
         cidr: "{{subnet_pub1_cidr}}"
         map_public: yes
-        tags:
+        resource_tags:
           name: demo-vpc-pubsub1
       register: pubsub1out
 
 
+      
