@@ -29,7 +29,7 @@
       ec2_group:
         name: "Bastion-host-sg"
         description: "This is the security group for the NAT instance"
-        vpc_id: "{{vpcid.vpc.id}}"
+        vpc_id: "{{vpc_id}}"
         region: "{{region}}"
         rules:
           - proto: tcp
