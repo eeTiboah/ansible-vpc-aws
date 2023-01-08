@@ -95,9 +95,12 @@
           Name: "Nginx Instance"
       register: nginx2ec2out
 
+    - debug:
+        var: nginx1ec2out.instances[0].instance_id
+
     - local_action:
         module: ec2_elb_lb
-        name: "App ELB"
+        name: "App-ELB"
         region: "{{region}}"
         state: "{{state}}"
         instance_ids:
