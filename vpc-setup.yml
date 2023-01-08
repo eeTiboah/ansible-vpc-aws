@@ -133,7 +133,9 @@
         image: "{{nat_instance_ami}}"
         region: "{{region}}"
         source_dest_check: no
-        count: 1
+        exact_count: 1
+        count_tag:
+          Name: "Nat Instance"
         wait: yes
         wait_timeout: 600
         instance_type: t2.medium
