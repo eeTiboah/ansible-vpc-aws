@@ -22,3 +22,8 @@ az2: us-east-1b
 az3: us-east-1c
 
 state: present
+
+#Bastions settings
+bastion_ami: ami-0b5eea76982371e91
+
+ip: 0.0.0.0/0
