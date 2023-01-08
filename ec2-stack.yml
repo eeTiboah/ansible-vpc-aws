@@ -108,4 +108,7 @@
         path: ./vars/output_vars
         line: "nginx2ec2ip: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}"
 
+    - local_action:
+        module
+
      
