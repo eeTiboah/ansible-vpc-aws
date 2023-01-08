@@ -95,17 +95,6 @@
           Name: "Nginx Instance"
       register: nginx2ec2out
 
-  
-    - name: Insert first nginx private ip
-      lineinfile:
-        path: ./vars/output_vars
-        line: "nginx1ec2ip: {{nginx1ec2out.instances[0].network_interfaces[0].private_ip_address}}"
-
-    - name: Insert second nginx private ip
-      lineinfile:
-        path: ./vars/output_vars
-        line: "nginx2ec2ip: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}"
-
     - local_action:
         module: ec2_elb_lb
         name: "App ELB"
@@ -132,7 +121,12 @@
           healthy_threshold: 2
           unhealthy_threshold: 2
 
-    
+    - name: Update host IPs
+      blockinfile:
+        path: vars/hostips
+        block: |
+          nginx1ec2: {{nginx1ec2out.instances[0].network_interfaces[0].private_ip_address}}
+          nginx2ec2: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}
     - name: Update inventory file
       blockinfile:
         path: ./inventory
