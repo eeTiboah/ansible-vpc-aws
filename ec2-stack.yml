@@ -95,17 +95,17 @@
           Name: "Nginx Instance"
       register: nginx2ec2out
 
-    - debug:
-        var: nginx1ec2out
+    # - debug:
+    #     var: nginx1ec2out
   
-    # - name: Insert first nginx private ip
-    #   lineinfile:
-    #     path: ./vars/output_vars
-    #     line: "nginx1ec2ip: {{nginx1ec2out}}"
+    - name: Insert first nginx private ip
+      lineinfile:
+        path: ./vars/output_vars
+        line: "nginx1ec2ip: {{nginx1ec2out.instances[0].network_interfaces[0].private_ip_address}}"
 
-    # - name: Insert second nginx private ip
-    #   lineinfile:
-    #     path: ./vars/output_vars
-    #     line: "nginx2ec2ip: {{nginx2ec2out}}"
+    - name: Insert second nginx private ip
+      lineinfile:
+        path: ./vars/output_vars
+        line: "nginx2ec2ip: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}"
 
      
