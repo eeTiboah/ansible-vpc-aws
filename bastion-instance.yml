@@ -52,7 +52,7 @@
         image_id: "{{bastion_ami}}"
         region: "{{region}}"
         state: "{{state}}"
-        security_group: "{{bastionsgout.group_name}}"
+        security_group: "{{bastionsgout.group_id}}"
         network:
           assign_public_ip: true
         tags:

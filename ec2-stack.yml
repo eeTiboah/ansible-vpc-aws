@@ -63,12 +63,49 @@
     - name: Update Security Group with own SG id
       ec2_group:
         name: "Private-Instance-SG"
-        description: "Allow ssh connection from within sg"
+        description: "This is the security group for the private instance"
         vpc_id: "{{vpc_id}}"
         region: "{{region}}"
         purge_rules: no
         rules:
           - proto: all
             group_id: "{{EC2SGout.group_id}}"
+    
+    - name: Create first Nginx instance
+      ec2_instance:
+        name: "Nginx 1 Instance"
+        key_name: ec2-key
+        vpc_subnet_id: "{{privsub1id}}"
+        image_id: "{{nginx_ami}}"
+        region: "{{region}}"
+        security_group: "{{EC2SGout.group_id}}"
+        tags:
+          Name: "Nginx Instance"
+      register: nginx1ec2out
+    
+    - name: Create second Nginx instance
+      ec2_instance:
+        name: "Nginx 2 Instance"
+        key_name: ec2-key
+        vpc_subnet_id: "{{privsub2id}}"
+        image_id: "{{nginx_ami}}"
+        region: "{{region}}"
+        security_group: "{{EC2SGout.group_id}}"
+        tags:
+          Name: "Nginx Instance"
+      register: nginx2ec2out
+
+    - debug:
+        var: nginx1ec2out
+  
+    # - name: Insert first nginx private ip
+    #   lineinfile:
+    #     path: ./vars/output_vars
+    #     line: "nginx1ec2ip: {{nginx1ec2out}}"
+
+    # - name: Insert second nginx private ip
+    #   lineinfile:
+    #     path: ./vars/output_vars
+    #     line: "nginx2ec2ip: {{nginx2ec2out}}"
 
      

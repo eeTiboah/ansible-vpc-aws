@@ -1,6 +1,5 @@
 
-nginx_ami_1: ami-0a7eae50da6b985bb
-nginx_ami_2: ami-0a7eae50da6b985bb
+nginx_ami: ami-0a7eae50da6b985bb
 
 region: us-east-1
 
