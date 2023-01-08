@@ -7,10 +7,10 @@ vpc_cidr: 172.20.0.0/16
 # Subnet range
 subnet_pub1_cidr: 172.20.1.0/24
 subnet_pub2_cidr: 172.20.2.0/24
-subnet_pub3_cidr: 172.20.3.0/24
+
 subnet_priv1_cidr: 172.20.4.0/24
 subnet_priv2_cidr: 172.20.5.0/24
-subnet_priv3_cidr: 172.20.6.0/24
+
 
 nat_instance_ami: ami-04e5df0cf5946b2a4
 # Region
@@ -19,7 +19,7 @@ region: us-east-1
 #Zone names
 az1: us-east-1a
 az2: us-east-1b
-az3: us-east-1c
+
 
 state: present
 
