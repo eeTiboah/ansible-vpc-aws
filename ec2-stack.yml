@@ -52,11 +52,23 @@
             to_port: 80
             group_id: "{{ELBSGout.group_id}}"
 
-
           - proto: tcp
             from_port: 22
             to_port: 22
             group_id: "{{bastionsgid}}"
             rule_desc: allow ssh connections
           
-      register: PISGout
+      register: EC2SGout
+
+    - name: Update Security Group with own SG id
+      ec2_group:
+        name: "Private-Instance-SG"
+        description: "Allow ssh connection from within sg"
+        vpc_id: "{{vpc_id}}"
+        region: "{{region}}"
+        purge_rules: no
+        rules:
+          - proto: all
+            group_id: "{{EC2SGout.group_id}}"
+
+     
