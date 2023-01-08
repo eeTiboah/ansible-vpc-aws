@@ -128,18 +128,16 @@
 
     - name: Set up a NAT instance
       ec2:
-        name: "NAT instance"
         key_name: "sample-key"
         vpc_subnet_id: "{{pubsub1out.subnet.id}}"
-        image_id: "{{nat_instance_ami}}"
+        image: "{{nat_instance_ami}}"
         region: "{{region}}"
         state: "{{state}}"
         source_dest_check: no
         group_id:
           - "{{natsgout.group_id}}"
-        network:
-          assign_public_ip: true
-        tags:
+        assign_public_ip: true
+        instance_tags:
           Name: "Nat Instance"
       register: natinstanceout
     
