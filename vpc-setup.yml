@@ -98,17 +98,17 @@
         vpc_id: "{{vpcout.vpc.id}}"
         region: "{{region}}"
         rules:
-          - proto: tcp
-            from_port: 22
-            to_port: 22
-            cidr_ip: 0.0.0.0/0
-            rule_desc: allow ssh connection
-          
-          # - proto: icmp
-          #   from_port: 0
-          #   to_port: 65535
+          # - proto: tcp
+          #   from_port: 22
+          #   to_port: 22
           #   cidr_ip: 0.0.0.0/0
-          #   rule_desc: allow all icmp connections
+          #   rule_desc: allow ssh connection
+          
+          - proto: all
+            from_port: 0
+            to_port: 65535
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all connections
       register: natsgout
   
     - name: Create ec2 key
@@ -127,14 +127,16 @@
       when: key_out.changed
 
     - name: Set up a NAT instance
-      ec2_instance:
+      ec2:
         name: "NAT instance"
         key_name: "sample-key"
         vpc_subnet_id: "{{pubsub1out.subnet.id}}"
         image_id: "{{nat_instance_ami}}"
         region: "{{region}}"
         state: "{{state}}"
-        security_group: "{{natsgout.group_name}}"
+        source_dest_check: no
+        group_id:
+          - "{{natsgout.group_id}}"
         network:
           assign_public_ip: true
         tags:
@@ -151,7 +153,7 @@
           - "{{privsub1out.subnet.id}}"
           - "{{privsub2out.subnet.id}}"
         routes:
-          - dest: 0.0.0.0/0
+          - dest: "{{ip}}"
             instance_id: "{{natinstanceout.instances[0].instance_id}}"
       register: rtbnatout
 
