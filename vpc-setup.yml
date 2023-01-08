@@ -136,11 +136,26 @@
           #   cidr_ip: 0.0.0.0/0
           #   rule_desc: allow all icmp connections
       register: natsgout
+  
+    - name: Create ec2 key
+      ec2_key:
+        name: sample-key
+        region: "{{region}}"
+      
+      register: key_out
+    
+    - name: Save private key into sample-key.pem
+      copy: 
+        content: "{{key_out.key.private_key}}"
+        dest: "./sample-key.pem"
+        mode: 0600
+      
+      when: key_out.changed
 
     - name: Set up a NAT instance
       ec2_instance:
         name: "NAT instance"
-        key_name: "sample_keypair"
+        key_name: "sample-key"
         vpc_subnet_id: "{{pubsub1out.subnet.id}}"
         image_id: "{{nat_instance_ami}}"
         region: "{{region}}"
