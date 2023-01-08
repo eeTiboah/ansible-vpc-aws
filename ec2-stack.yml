@@ -124,7 +124,7 @@
 
     - name: Update host IPs
       blockinfile:
-        path: vars/hostips
+        path: ./vars/hostips
         block: |
           nginx1ec2: {{nginx1ec2out.instances[0].network_interfaces[0].private_ip_address}}
           nginx2ec2: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}
