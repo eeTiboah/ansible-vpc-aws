@@ -25,3 +25,38 @@
         mode: 0600
       
       when: key_out.changed
+    
+    - name: Create Security Group for Load Balancer
+      ec2_group:
+        name: "ELB-SG"
+        description: "This is the security group for the Load Balancer"
+        vpc_id: "{{vpc_id}}"
+        region: "{{region}}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: "{{ip}}"
+            rule_desc: allow http
+      register: ELBSGout
+
+    - name: Create Security Group for private instances
+      ec2_group:
+        name: "Private-Instance-SG"
+        description: "This is the security group for the private instance"
+        vpc_id: "{{vpc_id}}"
+        region: "{{region}}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            group_id: "{{ELBSGout.group_id}}"
+
+
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            group_id: "{{bastionsgid}}"
+            rule_desc: allow ssh connections
+          
+      register: PISGout

@@ -39,6 +39,11 @@
             rule_desc: allow ssh connection
       register: bastionsgout
     
+    - name: Insert bastion group id into vars/output_vars
+      lineinfile:
+        path: ./vars/output_vars
+        line: "bastionsgid: {{bastionsgout.group_id}}"
+    
     - name: Create Bastion instance
       ec2_instance:
         name: "Bastion Instance"
