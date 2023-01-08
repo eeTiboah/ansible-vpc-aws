@@ -7,3 +7,21 @@
   tasks:
     - name: Import output variables
       include_vars: vars/output_vars
+
+    - name: Import private instance variables
+      include_vars: vars/private_instances_setup
+    
+    - name: Create ec2 key
+      ec2_key:
+        name: ec2-key
+        region: "{{region}}"
+      
+      register: key_out
+    
+    - name: Save private key into bastion-key.pem
+      copy: 
+        content: "{{key_out.key.private_key}}"
+        dest: "./ec2-key.pem"
+        mode: 0600
+      
+      when: key_out.changed
