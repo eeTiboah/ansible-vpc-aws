@@ -134,6 +134,7 @@
         region: "{{region}}"
         state: "{{state}}"
         source_dest_check: no
+        instance_type: t2.medium
         group_id:
           - "{{natsgout.group_id}}"
         assign_public_ip: true
