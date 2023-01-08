@@ -134,6 +134,8 @@
         region: "{{region}}"
         source_dest_check: no
         count: 1
+        wait: yes
+        wait_timeout: 600
         instance_type: t2.medium
         group_id:
           - "{{natsgout.group_id}}"
