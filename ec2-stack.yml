@@ -18,11 +18,11 @@
       
       register: key_out
     
-    - name: Save private key into bastion-key.pem
+    - name: Save private key into ec2-key.pem
       copy: 
         content: "{{key_out.key.private_key}}"
         dest: "./ec2-key.pem"
-        mode: 0600
+        mode: 0400
       
       when: key_out.changed
     
@@ -95,8 +95,6 @@
           Name: "Nginx Instance"
       register: nginx2ec2out
 
-    # - debug:
-    #     var: nginx1ec2out
   
     - name: Insert first nginx private ip
       lineinfile:
@@ -109,6 +107,48 @@
         line: "nginx2ec2ip: {{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}"
 
     - local_action:
-        module
+        module: ec2_elb_lb
+        name: "App ELB"
+        region: "{{region}}"
+        state: "{{state}}"
+        instance_ids:
+          - nginx1ec2out.instances[0].instance_id
+          - nginx2ec2out.instances[0].instance_id
+        purge_instance_ids: true
+        security_group_ids: "{{EC2SGout.group_id}}"
+        subnets:
+          - "{{ pubsub1id }}"
+          - "{{ pubsub2id }}"
+        listeners:
+          - protocol: http
+            load_balancer_port: 80
+            instance_port: 80
+        health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/index.html"
+          response_timeout: 5
+          interval: 30
+          healthy_threshold: 2
+          unhealthy_threshold: 2
 
-     
+    
+    - name: Update inventory file
+      blockinfile:
+        path: ./inventory
+        block: |
+          nginx01 ansible_host={{nginx1ec2out.instances[0].network_interfaces[0].private_ip_address}}
+          nginx02 ansible_host={{nginx2ec2out.instances[0].network_interfaces[0].private_ip_address}}
+          controller ansible_host=127.0.0.1 ansible_connection=local
+
+          [webserver]
+          nginx01
+          nginx02
+
+          [ec2_stack:children]
+          webserver
+
+          [ec2_stack:vars]
+          ansible_user=ubuntu
+          ansible_ssh_private_key_file=ec2-key.pem
+          #ansible_python_interpreter=/usr/bin/python3

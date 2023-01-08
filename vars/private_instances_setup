@@ -4,3 +4,5 @@ nginx_ami: ami-0b5eea76982371e91
 region: us-east-1
 
 ip: 0.0.0.0/0
+
+state: present

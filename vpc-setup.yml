@@ -163,7 +163,7 @@
 
     - name: Save outputs into a file
       copy:
-        content: "vpc_id: {{vpcout.vpc.id}}\npubsub1id: {{pubsub1out.subnet.id}}\npubsub2id: {{pubsub2out.subnet.id}}\nprivsub1id: {{privsub1out.subnet.id}}\nprivsub2id: {{privsub2out.subnet.id}}\nigwid: {{igwout.gateway_id}}\nrtbpubid: {{rtbpubout.route_table.id}}\nnatinstanceid: {{natinstanceout.instances[0].id}}\nrtbnatid: {{rtbnatout.route_table.id}}"
+        content: "region: {{region}}\nvpc_id: {{vpcout.vpc.id}}\npubsub1id: {{pubsub1out.subnet.id}}\npubsub2id: {{pubsub2out.subnet.id}}\nprivsub1id: {{privsub1out.subnet.id}}\nprivsub2id: {{privsub2out.subnet.id}}\nigwid: {{igwout.gateway_id}}\nrtbpubid: {{rtbpubout.route_table.id}}\nnatinstanceid: {{natinstanceout.instances[0].id}}\nrtbnatid: {{rtbnatout.route_table.id}}"
         dest: vars/output_vars
 
 
