@@ -134,6 +134,7 @@
         region: "{{region}}"
         state: "{{state}}"
         source_dest_check: no
+        exact_count: 1
         instance_type: t2.medium
         group_id:
           - "{{natsgout.group_id}}"
