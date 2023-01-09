@@ -96,31 +96,48 @@
       register: nginx2ec2out
 
 
-    - local_action:
-        module: ec2_elb_lb
-        name: "App-ELB"
-        region: "{{region}}"
+    # - local_action:
+    #     module: ec2_elb_lb
+    #     name: "App-ELB"
+    #     region: "{{region}}"
+    #     state: "{{state}}"
+    #     instance_ids:
+    #       - "{{nginx1ec2out.instances[0].instance_id}}"
+    #       - "{{nginx2ec2out.instances[0].instance_id}}"
+    #     purge_instance_ids: true
+    #     security_group_ids: "{{EC2SGout.group_id}}"
+    #     cross_az_load_balancing: yes
+    #     zones:
+    #       - us-east-1a
+    #       - us-east-1b
+    #     subnets:
+    #       - "{{ pubsub1id }}"
+    #       - "{{ pubsub2id }}"
+    #     listeners:
+    #       - protocol: http
+    #         load_balancer_port: 80
+    #         instance_port: 80
+    #     health_check:
+    #       ping_protocol: http
+    #       ping_port: 80
+    #       ping_path: "/index.html"
+    #       response_timeout: 5
+    #       interval: 30
+    #       healthy_threshold: 2
+    #       unhealthy_threshold: 2
+    
+    - amazon.aws.elb_application_lb:
+        name: "AppALB"
         state: "{{state}}"
-        instance_ids:
-          - "{{nginx1ec2out.instances[0].instance_id}}"
-          - "{{nginx2ec2out.instances[0].instance_id}}"
-        purge_instance_ids: true
-        security_group_ids: "{{EC2SGout.group_id}}"
+        security_groups: "{{EC2SGout.group_id}}"
         subnets:
           - "{{ pubsub1id }}"
           - "{{ pubsub2id }}"
         listeners:
-          - protocol: http
-            load_balancer_port: 80
-            instance_port: 80
-        health_check:
-          ping_protocol: http
-          ping_port: 80
-          ping_path: "/index.html"
-          response_timeout: 5
-          interval: 30
-          healthy_threshold: 2
-          unhealthy_threshold: 2
+          - Protocol: http
+            Port: 80
+          
+
 
     - name: Update host IPs
       blockinfile:

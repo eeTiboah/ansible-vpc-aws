@@ -126,27 +126,36 @@
       
       when: key_out.changed
 
-    - name: Set up a NAT instance
-      ec2:
-        key_name: "sample-key"
-        vpc_subnet_id: "{{pubsub1out.subnet.id}}"
-        image: "{{nat_instance_ami}}"
-        region: "{{region}}"
-        source_dest_check: no
-        exact_count: 1
-        count_tag:
-          Name: "Nat Instance"
+    # - name: Set up a NAT instance
+    #   ec2:
+    #     key_name: "sample-key"
+    #     vpc_subnet_id: "{{pubsub1out.subnet.id}}"
+    #     image: "{{nat_instance_ami}}"
+    #     region: "{{region}}"
+    #     source_dest_check: no
+    #     exact_count: 1
+    #     count_tag:
+    #       Name: "Nat Instance"
+    #     wait: yes
+    #     wait_timeout: 600
+    #     instance_type: t2.medium
+    #     group_id:
+    #       - "{{natsgout.group_id}}"
+    #     assign_public_ip: true
+    #     instance_tags:
+    #       Name: "Nat Instance"
+    #   register: natinstanceout
+
+    - name: Setup NAT Gateway
+      ec2_vpc_nat_gateway:
+        state: "{{state}}"
+        subnet_id: "{{pubsub1out.subnet.id}}"
         wait: yes
-        wait_timeout: 600
-        instance_type: t2.medium
-        group_id:
-          - "{{natsgout.group_id}}"
-        assign_public_ip: true
-        instance_tags:
-          Name: "Nat Instance"
-      register: natinstanceout
+        region: "{{region}}"
+        if_exist_do_not_create: true
+      register: natgatewayout
     
-    - name: Set up route table for NAT instance
+    - name: Set up route table for NAT gateway
       ec2_vpc_route_table:
         vpc_id: "{{vpcout.vpc.id}}"
         region: "{{region}}"
@@ -157,13 +166,13 @@
           - "{{privsub2out.subnet.id}}"
         routes:
           - dest: "{{ip}}"
-            instance_id: "{{natinstanceout.instances[0].id}}"
+            gateway_id: "{{natgatewayout.nat_gateway_id}}"
       register: rtbnatout
 
 
     - name: Save outputs into a file
       copy:
-        content: "region: {{region}}\nvpc_id: {{vpcout.vpc.id}}\npubsub1id: {{pubsub1out.subnet.id}}\npubsub2id: {{pubsub2out.subnet.id}}\nprivsub1id: {{privsub1out.subnet.id}}\nprivsub2id: {{privsub2out.subnet.id}}\nigwid: {{igwout.gateway_id}}\nrtbpubid: {{rtbpubout.route_table.id}}\nnatinstanceid: {{natinstanceout.instances[0].id}}\nrtbnatid: {{rtbnatout.route_table.id}}"
+        content: "region: {{region}}\nvpc_id: {{vpcout.vpc.id}}\npubsub1id: {{pubsub1out.subnet.id}}\npubsub2id: {{pubsub2out.subnet.id}}\nprivsub1id: {{privsub1out.subnet.id}}\nprivsub2id: {{privsub2out.subnet.id}}\nigwid: {{igwout.gateway_id}}\nrtbpubid: {{rtbpubout.route_table.id}}\nnatgatewayid: {{natgatewayout.nat_gateway_id}}\nrtbnatid: {{rtbnatout.route_table.id}}"
         dest: vars/output_vars
 
 

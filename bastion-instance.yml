@@ -28,7 +28,7 @@
     - name: Create Security Group for Bastion host
       ec2_group:
         name: "Bastion-host-sg"
-        description: "This is the security group for the NAT instance"
+        description: "This is the security group for bastion"
         vpc_id: "{{vpc_id}}"
         region: "{{region}}"
         rules:

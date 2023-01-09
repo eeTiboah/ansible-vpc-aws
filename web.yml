@@ -1,0 +1,32 @@
+
+
+- name: Setup Nginx
+  hosts: webserver
+  gather_facts: no
+  tasks:
+    - name: Install nginx
+      apt: 
+        name: nginx
+        state: present
+        update_cache: yes
+    
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Disable default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      tags:
+        - conf
+    
+    - name: Deploy web config
+      template:
+        src: templates/nginx.j2
+        dest: /etc/nginx/sites-available/site
+      
+      tags:
+        - conf
