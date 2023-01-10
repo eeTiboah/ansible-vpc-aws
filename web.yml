@@ -9,12 +9,16 @@
         name: nginx
         state: present
         update_cache: yes
+      tags:
+        - package
     
     - name: Start and enable Nginx
       service:
         name: nginx
         state: started
         enabled: yes
+      tags:
+       - svc
     
     - name: Disable default nginx site
       file:
@@ -30,3 +34,21 @@
       
       tags:
         - conf
+
+    - name: Deploy web config
+      template:
+        src: /etc/nginx/sites-available/site
+        dest: /etc/nginx/sites-enabled/site
+        state: link
+      notify:
+        - Restart Nginx
+      
+      tags:
+        - conf
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+    
