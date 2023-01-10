@@ -109,10 +109,8 @@
         cross_az_load_balancing: yes
         zones:
           - us-east-1a
-          - us-east-1b
         subnets:
           - "{{ pubsub1id }}"
-          - "{{ pubsub2id }}"
         listeners:
           - protocol: http
             load_balancer_port: 80
