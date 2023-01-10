@@ -3,7 +3,7 @@
 <html>
 <body>
 
-<h2> hello world this is my servers ip address! </h2>
+<h2> server ip address! </h2>
 
 <h1>
 <?php

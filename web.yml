@@ -4,9 +4,15 @@
   hosts: webserver
   gather_facts: no
   tasks:
+    - name: Install php8.1-fpm
+      apt:
+        name: php8.1-fpm
+        state: present
+        update_cache: yes
+        
     - name: Install nginx
       apt: 
-        name: nginx1
+        name: nginx
         state: present
         update_cache: yes
       tags:
